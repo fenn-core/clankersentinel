@@ -7,8 +7,8 @@ class PingCog(commands.Cog):
         self.bot = bot
 
     @app_commands.command(name="ping", description="Prints out test message")
-    async def ping(self, ctx):
-        await ctx.response.send_message("Test-Message 1234 - AbCd")
+    async def ping(self, interaction):
+        await interaction.response.send_message("Test-Message 1234 - AbCd")
 
 
 async def setup(bot):

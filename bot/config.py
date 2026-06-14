@@ -18,3 +18,25 @@ TEST_GUILD_ID = int(getenv("TEST_GUILD_ID"))
 
 if TEST_GUILD_ID is None:
     raise KeyError
+
+
+DATABASE_PATH = ROOT_DIR / "bot" / "data" / "clankersentinel.db"
+
+if DATABASE_PATH is None:
+    raise KeyError
+
+
+def info(message):
+    print(f"\033[92m[INFO]\033[0m {message}")
+
+
+def warning(message):
+    print(f"\033[93m[WARNING]\033[0m {message}")
+
+
+def error(message):
+    print(f"\033[91m[ERROR]\033[0m {message}")
+
+
+def debug(message):
+    print(f"\033[96m[DEBUG]\033[0m {message}")
