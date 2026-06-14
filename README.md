@@ -26,7 +26,6 @@ Early development.
 - Plot generation
 - Compiling for a handful of languages 
 - Assembly inspection
-- Compilation utilities
 
 ### Operations
 - UPS monitoring
