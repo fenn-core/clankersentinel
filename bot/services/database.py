@@ -45,15 +45,15 @@ class User:
 
     @property
     def text_level(self):
-        return self.text_xp // 500
+        return (self.text_xp // 500) + 1
 
     @property
     def voice_level(self):
-        return self.voice_xp // 500
+        return (self.voice_xp // 500) + 1
 
     @property
     def level(self):
-        return self.total_xp // 1000
+        return (self.total_xp // 1000) + 1
 
 
 def ensure_user(conn, user):
@@ -103,6 +103,20 @@ def record_voice_session(conn, user, session_duration):
         (session_duration, user.guild_id, user.user_id),
     )
     conn.commit()
+
+
+def query_user_stats(conn, user):
+    cursor = conn.cursor()
+    cursor.execute(
+        """
+    SELECT message_count, voice_seconds
+    FROM user_stats
+    WHERE guild_id = ? AND user_id = ?;
+    """,
+        (user.guild_id, user.user_id),
+    )
+
+    return cursor.fetchone()
 
 
 def initialize():

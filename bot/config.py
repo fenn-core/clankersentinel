@@ -40,3 +40,18 @@ def error(message):
 
 def debug(message):
     print(f"\033[96m[DEBUG]\033[0m {message}")
+
+
+def format_time(seconds):
+    hours, remainder = divmod(seconds, 3600)
+    minutes, _ = divmod(remainder, 60)
+
+    parts = []
+    if hours:
+        parts.append(f"{hours}h")
+    if minutes or not parts:
+        parts.append(f"{minutes}m")
+
+    formatted_time = " ".join(parts)
+
+    return formatted_time
