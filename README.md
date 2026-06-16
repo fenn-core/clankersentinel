@@ -1,6 +1,6 @@
 # Clanker Sentinel
 
-A self-hosted Discord bot for private communities featuring moderation, games, statistics, homelab telemetry, engineering tools, and questionable administrative practices.
+A self-hosted Discord bot for private communities featuring moderation, games, statistics, homelab telemetry and engineering tools.
 
 ## Status
 
