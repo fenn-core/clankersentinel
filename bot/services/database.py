@@ -2,11 +2,6 @@ from bot.config import DATABASE_PATH
 import sqlite3
 
 
-def connect():
-    conn = sqlite3.connect(DATABASE_PATH)
-    return conn
-
-
 def create_user_stats_table(conn):
     conn.cursor().execute("""
     CREATE TABLE IF NOT EXISTS user_stats (
@@ -119,10 +114,98 @@ def query_user_stats(conn, user):
     return cursor.fetchone()
 
 
+def create_auto_responses_table(conn):
+    conn.cursor().execute("""
+    CREATE TABLE IF NOT EXISTS auto_responses (
+        guild_id INTEGER NOT NULL,
+        trigger TEXT NOT NULL,
+        response TEXT NOT NULL, 
+        enabled BOOL NOT NULL CHECK (enabled IN (0, 1)),
+        PRIMARY KEY (guild_id, trigger)
+    )
+                        
+    """)
+    conn.commit()
+
+
+class Trigger:
+    def __init__(self, guild_id, trigger, response, enabled):
+        self.guild_id = guild_id
+        self.trigger = trigger
+        self.response = response
+        self.enabled = enabled
+
+
+def add_trigger(conn, trigger):
+    trigger_data = (
+        trigger.guild_id,
+        trigger.trigger.casefold().strip(),
+        trigger.response,
+        trigger.enabled,
+    )
+
+    conn.cursor().execute(
+        """ 
+    INSERT OR IGNORE INTO auto_responses 
+    (guild_id, trigger, response, enabled)
+    (?, ?, ?, ?)
+    """,
+        trigger_data,
+    )
+    conn.commit()
+
+
+def delete_trigger(conn, trigger):
+    conn.cursor().execute(
+        """
+    DELETE FROM auto_responses 
+    WHERE guild_id = ? 
+    AND trigger = ?;
+    """,
+        (trigger.guild_id, trigger.trigger),
+    )
+    conn.commit()
+
+
+def change_trigger_state(conn, trigger, state):
+    conn.cursor().execute(
+        """
+    UPDATE auto_responses 
+    SET enable = ? 
+    WHERE guild_id = ? 
+        AND trigger = ?
+    """,
+        (state, trigger.guild_id, trigger.trigger),
+    )
+
+    conn.commit()
+
+
+def query_triggers(conn, trigger):
+    cursor = conn.cursor()
+    cursor.execute(
+        """
+    SELECT response 
+    FROM auto_responses 
+    WHERE guild_id = ?
+        AND trigger = ?
+        AND enabled = 1;
+    """,
+        (trigger.guild_id, trigger.trigger),
+    )
+
+    return cursor.fetchone()
+
+
+def connect():
+    conn = sqlite3.connect(DATABASE_PATH)
+    return conn
+
+
 def initialize():
     conn = connect()
-    cursor = conn.cursor()
     create_user_stats_table(conn)
+    create_auto_responses_table(conn)
 
     return conn
 

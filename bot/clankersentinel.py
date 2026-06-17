@@ -1,10 +1,10 @@
-from bot.config import TEST_GUILD_ID
+from bot.config import TEST_GUILD_ID, format_time
 from bot.config import info, error
 import discord
 from discord.ext import commands
 from bot.services import database
 from time import time
-from asyncio import sleep
+from asyncio import sleep, create_task
 
 
 class ClankerSentinel(commands.Bot):
@@ -14,10 +14,12 @@ class ClankerSentinel(commands.Bot):
         super().__init__(command_prefix="/", intents=intents)
         self.conn = None
         self.startup_time = None
+        self.uptime_task = None
 
     async def uptime(self):
-        sleep(300)
-        info(f"uptime : {time() - self.startup_time}")
+        while True:
+            await sleep(300)
+            info(f"uptime : {format_time(time() - self.startup_time)}")
 
     async def setup_hook(self):
         self.conn = database.initialize()
@@ -30,6 +32,8 @@ class ClankerSentinel(commands.Bot):
         info("loaded PingCog")
         await self.load_extension("bot.cogs.stats")
         info("loaded StatsCog")
+        await self.load_extension("bot.cogs.trigger")
+        info("loaded TriggerCog")
 
         guild = discord.Object(id=TEST_GUILD_ID)
         self.tree.copy_global_to(guild=guild)
@@ -39,3 +43,6 @@ class ClankerSentinel(commands.Bot):
 
     async def on_ready(self):
         info(f"Bot successfully logged in as {self.user}")
+
+        if self.uptime_task is None:
+            self.uptime_task = create_task(self.uptime())

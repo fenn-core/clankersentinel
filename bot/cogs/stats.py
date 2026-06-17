@@ -6,7 +6,6 @@ import discord
 from discord.ext import commands
 from discord import app_commands
 from time import time
-from datetime import timedelta
 
 
 class StatsCog(commands.Cog):
