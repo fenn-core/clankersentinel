@@ -60,6 +60,7 @@ class TriggerCog(commands.Cog):
         if response is None:
             return
 
+        (response,) = response  # unpack the single variable tuple
         await message.channel.send(f"{response}")
 
 
