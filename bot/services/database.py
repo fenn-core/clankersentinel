@@ -148,7 +148,7 @@ def add_trigger(conn, trigger):
         """ 
     INSERT OR IGNORE INTO auto_responses 
     (guild_id, trigger, response, enabled)
-    (?, ?, ?, ?)
+    VALUES (?, ?, ?, ?)
     """,
         trigger_data,
     )
