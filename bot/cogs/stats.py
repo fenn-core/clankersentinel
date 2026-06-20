@@ -85,7 +85,7 @@ class StatsCog(commands.Cog):
         description="Sunucudaki en aktif kullanıcıları sıralar",
     )
     async def leaderboard(self, interaction):
-        await interaction.response.send_message("leaderboard feature under development")
+        pass
 
 
 async def setup(bot):

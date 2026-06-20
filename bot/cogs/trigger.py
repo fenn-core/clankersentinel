@@ -63,6 +63,12 @@ class TriggerCog(commands.Cog):
     async def list_triggers(self, interaction):
         all_values = database.query_all_triggers(self.bot.conn, interaction.guild.id)
 
+        if not all_values:
+            await interaction.response.send_message(
+                "Hata : Listelenecek otomatik cevap bulunamadi"
+            )
+            return
+
         formatted_output = "Trigger  ->  Response \n\n"
         for value in all_values:
             formatted_output += f"{value[0]}  ->  {value[1]} \n"
@@ -85,9 +91,6 @@ class TriggerCog(commands.Cog):
 
         (response,) = response  # unpack the single variable tuple
         await message.channel.send(f"{response}")
-
-
-6
 
 
 async def setup(bot):
