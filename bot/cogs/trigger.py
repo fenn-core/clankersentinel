@@ -18,33 +18,56 @@ class TriggerCog(commands.Cog):
         response="Botun vereceği yanıt ",
     )
     async def add_trigger(self, interaction, trigger: str, response: str):
-        trigger = Trigger(interaction.guild.id, trigger, response, True)
+        trigger_obj = Trigger(interaction.guild.id, trigger, response, True)
 
-        if database.query_triggers(self.bot.conn, trigger) is not None:
+        if database.query_triggers(self.bot.conn, trigger_obj) is not None:
             await interaction.response.send_message(
                 "Hata : Bu otomatik cevap onceden ayarlanmis"
             )
             return
 
-        database.add_trigger(self.bot.conn, trigger)
+        database.add_trigger(self.bot.conn, trigger_obj)
+        await interaction.response.send_message("Otomatik mesaj eklendi")
 
-    # @autoresponse_group.command(
-    #     name="delete", description="Secilen otomatik cevabi siler"
-    # )
-    # async def delete_trigger():
-    #     pass
+    @autoresponse_group.command(
+        name="delete", description="Secilen otomatik cevabi siler"
+    )
+    async def delete_trigger(self, interaction, trigger: str):
+        trigger_obj = Trigger(interaction.guild.id, trigger, None, None)
+        deleted = database.delete_triggers(self.bot.conn, trigger_obj)
 
-    # @autoresponse_group.command(
-    #     name="state", description="Secilen otomatik cevabı acıp kapatır"
-    # )
-    # async def change_trigger_state():
-    #     pass
+        if deleted:
+            await interaction.response.send_message("Otomatik cevap silindi")
+            return
 
-    # @autoresponse_group.command(
-    #     name="listall", description="Tum otomatik cevaplari listeler"
-    # )
-    # async def list_triggers():
-    #     pass
+        await interaction.response.send_message("Hata : Otomatik cevap bulunamadi")
+
+    @autoresponse_group.command(
+        name="state", description="Secilen otomatik cevabı acıp kapatır"
+    )
+    async def change_trigger_state(self, interaction, trigger: str, status: bool):
+        trigger_obj = Trigger(interaction.guild.id, trigger, None, None)
+        changed = database.change_trigger_state(self.bot.conn, trigger_obj, status)
+
+        if changed:
+            await interaction.response.send_message(
+                "Otomatik cevap durumu degistirildi"
+            )
+            return
+
+        await interaction.response.send_message("Hata : Otomatik cevap bulunamadi")
+
+    @autoresponse_group.command(
+        name="listall", description="Tum otomatik cevaplari listeler"
+    )
+    async def list_triggers(self, interaction):
+        all_values = database.query_all_triggers(self.bot.conn, interaction.guild.id)
+
+        formatted_output = "Trigger  ->  Response \n\n"
+        for value in all_values:
+            formatted_output += f"{value[0]}  ->  {value[1]} \n"
+
+        await interaction.response.send_message(f"```{formatted_output}```")
 
     @commands.Cog.listener()
     async def on_message(self, message):
@@ -62,6 +85,9 @@ class TriggerCog(commands.Cog):
 
         (response,) = response  # unpack the single variable tuple
         await message.channel.send(f"{response}")
+
+
+6
 
 
 async def setup(bot):

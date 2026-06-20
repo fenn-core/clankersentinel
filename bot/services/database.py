@@ -168,10 +168,11 @@ def delete_trigger(conn, trigger):
 
 
 def change_trigger_state(conn, trigger, state):
-    conn.cursor().execute(
+    cursor = conn.cursor()
+    cursor.execute(
         """
     UPDATE auto_responses 
-    SET enable = ? 
+    SET enabled = ? 
     WHERE guild_id = ? 
         AND trigger = ?
     """,
@@ -179,6 +180,7 @@ def change_trigger_state(conn, trigger, state):
     )
 
     conn.commit()
+    return cursor.rowcount != 0  # return False if no value gets deleted
 
 
 def query_triggers(conn, trigger):
@@ -195,6 +197,35 @@ def query_triggers(conn, trigger):
     )
 
     return cursor.fetchone()
+
+
+def query_all_triggers(conn, guild_id):
+    cursor = conn.cursor()
+    cursor.execute(
+        """
+    SELECT trigger, response 
+    FROM auto_responses 
+    WHERE guild_id = ?
+    """,
+        (guild_id,),
+    )
+
+    return cursor.fetchall()
+
+
+def delete_triggers(conn, trigger):
+    cursor = conn.cursor()
+    cursor.execute(
+        """
+    DELETE FROM auto_responses
+    WHERE guild_id = ?
+        AND trigger = ?;
+        """,
+        (trigger.guild_id, trigger.trigger),
+    )
+
+    conn.commit()
+    return cursor.rowcount != 0  # return False if no value gets deleted
 
 
 def connect():
