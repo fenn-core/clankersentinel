@@ -80,12 +80,81 @@ class StatsCog(commands.Cog):
         # the formatting used here is temporary,
         # a image based output system will be implemented in the future
 
-    @app_commands.command(
-        name="leaderboard",
-        description="Sunucudaki en aktif kullanıcıları sıralar",
+    leaderboard_group = app_commands.Group(
+        name="leaderboard", description="Sunucudaki en aktif kullanıcıları sıralar"
     )
-    async def leaderboard(self, interaction):
-        pass
+
+    @leaderboard_group.command(
+        name="text", description="Sunucuda en çok mesaj atan kullanıcıları sıralar"
+    )
+    async def text(self, interaction: discord.Interaction):
+
+        text_top5 = database.retrieve_top5_text_users(
+            self.bot.conn, interaction.guild.id
+        )
+
+        if not text_top5:
+            return await interaction.response.send_message(
+                "Henüz mesaj verisi bulunmuyor."
+            )
+
+        leaderboard = ""
+
+        for rank, (user_id, message_count) in enumerate(text_top5, start=1):
+            member = interaction.guild.get_member(user_id)
+
+            if member:
+                name = member.display_name
+            else:
+                user = await self.bot.fetch_user(user_id)
+                name = user.name
+
+            leaderboard += f"**#{rank}** {name} • {message_count} messages\n"
+
+        embed = discord.Embed(
+            title="🏆 Text Leaderboard 🏆",
+            description=leaderboard,
+            color=discord.Color.blue(),
+        )
+
+        await interaction.response.send_message(embed=embed)
+
+    @leaderboard_group.command(
+        name="voice",
+        description="Sunucudaki en yuksek sesli suresine sahip kullanıcıları sıralar",
+    )
+    async def voice(self, interaction: discord.Interaction):
+
+        voice_top5 = database.retrieve_top5_voice_users(
+            self.bot.conn, interaction.guild.id
+        )
+
+        if not voice_top5:
+            return await interaction.response.send_message(
+                "Henüz sesli verisi bulunmuyor."
+            )
+
+        leaderboard = ""
+
+        for rank, (user_id, user_voice_time) in enumerate(voice_top5, start=1):
+            formatted_time = format_time(user_voice_time)
+            member = interaction.guild.get_member(user_id)
+
+            if member:
+                name = member.display_name
+            else:
+                user = await self.bot.fetch_user(user_id)
+                name = user.name
+
+            leaderboard += f"**#{rank}** {name} • {formatted_time} \n"
+
+        embed = discord.Embed(
+            title="🏆 Voice Leaderboard 🏆",
+            description=leaderboard,
+            color=discord.Color.blue(),
+        )
+
+        await interaction.response.send_message(embed=embed)
 
 
 async def setup(bot):

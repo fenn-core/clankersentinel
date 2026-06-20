@@ -74,6 +74,36 @@ def ensure_user(conn, user):
     return cursor.rowcount > 0  # return False if user already exists
 
 
+def retrieve_top5_text_users(conn, guild_id):
+    cursor = conn.cursor()
+    cursor.execute(
+        """
+        SELECT user_id, message_count FROM user_stats 
+        WHERE guild_id = ?
+        ORDER BY message_count DESC
+        LIMIT 5; 
+        """,
+        (guild_id,),
+    )
+
+    return cursor.fetchall()
+
+
+def retrieve_top5_voice_users(conn, guild_id):
+    cursor = conn.cursor()
+    cursor.execute(
+        """
+        SELECT user_id, voice_seconds FROM user_stats 
+        WHERE guild_id = ?
+        ORDER BY voice_seconds DESC
+        LIMIT 5; 
+        """,
+        (guild_id,),
+    )
+
+    return cursor.fetchall()
+
+
 def increment_message_count(conn, user):
     conn.cursor().execute(
         """
