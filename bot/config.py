@@ -1,3 +1,4 @@
+import json
 from dotenv import load_dotenv
 from os import getenv
 from pathlib import Path
@@ -24,6 +25,14 @@ DATABASE_PATH = ROOT_DIR / "bot" / "data" / "clankersentinel.db"
 
 if DATABASE_PATH is None:
     raise KeyError
+
+
+with open("config.json", "r") as config:
+    dicts = json.load(config)
+
+DESCRIPTIONS = dicts["descriptions"]
+EMBED_ELEMENTS = dicts["embed_elements"]
+FEEDBACK = dicts["feedback"]
 
 
 def info(message):

@@ -1,11 +1,23 @@
+import discord
+from discord import app_commands
+from discord.ext import commands
+
+from time import time
+
+from bot.config import (
+    DESCRIPTIONS,
+    EMBED_ELEMENTS,
+    FEEDBACK,
+    format_time,
+    warning,
+)
+
 from bot.services import database
 from bot.services.database import User
-from bot.config import warning
-from bot.config import format_time
-import discord
-from discord.ext import commands
-from discord import app_commands
-from time import time
+
+LEADERBOARD_DESC = DESCRIPTIONS["leaderboard"]
+LEADERBOARD_EMBED = EMBED_ELEMENTS["leaderboard"]
+LEADERBOARD_FEEDBACK = FEEDBACK["leaderboard"]
 
 
 class StatsCog(commands.Cog):
@@ -48,7 +60,7 @@ class StatsCog(commands.Cog):
 
     @app_commands.command(
         name="rank",
-        description="Seviye, deneyim ve aktivite istatistiklerini görüntüler",
+        description=DESCRIPTIONS["rank"],
     )
     async def rank(self, interaction):
         user = User(interaction.guild.id, interaction.user.id)
@@ -57,20 +69,31 @@ class StatsCog(commands.Cog):
             self.bot.conn, user
         )
 
+        rank_embed = EMBED_ELEMENTS["rank"]
+
         embed = discord.Embed(
-            title=f"{interaction.user.name}'s Server Stats", color=discord.Color.blue()
+            title=f"{interaction.user.name}{rank_embed["title"]}",
+            color=discord.Color.blue(),
         )
-        embed.add_field(name="Level", value=user.level, inline=True)
-        embed.add_field(name="Text Level", value=user.text_level, inline=True)
-        embed.add_field(name="Voice Level", value=user.voice_level, inline=True)
-
-        embed.add_field(name="Total XP", value=user.total_xp, inline=True)
-        embed.add_field(name="Text XP", value=user.text_xp, inline=True)
-        embed.add_field(name="Voice XP", value=user.voice_xp, inline=True)
-
-        embed.add_field(name="Messages", value=user.message_count, inline=True)
+        embed.add_field(name=rank_embed["level"], value=user.level, inline=True)
         embed.add_field(
-            name="Voice Time", value=format_time(user.voice_seconds), inline=True
+            name=rank_embed["text_level"], value=user.text_level, inline=True
+        )
+        embed.add_field(
+            name=rank_embed["voice_level"], value=user.voice_level, inline=True
+        )
+
+        embed.add_field(name=rank_embed["total_xp"], value=user.total_xp, inline=True)
+        embed.add_field(name=rank_embed["text_xp"], value=user.text_xp, inline=True)
+        embed.add_field(name=rank_embed["voice_xp"], value=user.voice_xp, inline=True)
+
+        embed.add_field(
+            name=rank_embed["messages"], value=user.message_count, inline=True
+        )
+        embed.add_field(
+            name=rank_embed["voice_time"],
+            value=format_time(user.voice_seconds),
+            inline=True,
         )
 
         await interaction.response.send_message(embed=embed)
@@ -78,15 +101,13 @@ class StatsCog(commands.Cog):
         user.voice_seconds = 0
 
         # the formatting used here is temporary,
-        # a image based output system will be implemented in the future
+        # an image based output system will be implemented in the future
 
     leaderboard_group = app_commands.Group(
-        name="leaderboard", description="Sunucudaki en aktif kullanıcıları sıralar"
+        name="leaderboard", description=LEADERBOARD_DESC["group"]
     )
 
-    @leaderboard_group.command(
-        name="text", description="Sunucuda en çok mesaj atan kullanıcıları sıralar"
-    )
+    @leaderboard_group.command(name="text", description=LEADERBOARD_DESC["text"])
     async def text(self, interaction: discord.Interaction):
 
         text_top5 = database.retrieve_top5_text_users(
@@ -95,7 +116,7 @@ class StatsCog(commands.Cog):
 
         if not text_top5:
             return await interaction.response.send_message(
-                "Henüz mesaj verisi bulunmuyor."
+                LEADERBOARD_FEEDBACK["no_text_data"]
             )
 
         leaderboard = ""
@@ -112,7 +133,7 @@ class StatsCog(commands.Cog):
             leaderboard += f"**#{rank}** {name} • {message_count} messages\n"
 
         embed = discord.Embed(
-            title="🏆 Text Leaderboard 🏆",
+            title=LEADERBOARD_EMBED["text_leaderboard_title"],
             description=leaderboard,
             color=discord.Color.blue(),
         )
@@ -121,17 +142,16 @@ class StatsCog(commands.Cog):
 
     @leaderboard_group.command(
         name="voice",
-        description="Sunucudaki en yuksek sesli suresine sahip kullanıcıları sıralar",
+        description=LEADERBOARD_DESC["voice"],
     )
     async def voice(self, interaction: discord.Interaction):
-
         voice_top5 = database.retrieve_top5_voice_users(
             self.bot.conn, interaction.guild.id
         )
 
         if not voice_top5:
             return await interaction.response.send_message(
-                "Henüz sesli verisi bulunmuyor."
+                LEADERBOARD_FEEDBACK["no_voice_data"]
             )
 
         leaderboard = ""
@@ -149,7 +169,7 @@ class StatsCog(commands.Cog):
             leaderboard += f"**#{rank}** {name} • {formatted_time} \n"
 
         embed = discord.Embed(
-            title="🏆 Voice Leaderboard 🏆",
+            title=LEADERBOARD_EMBED["voice_leaderboard_title"],
             description=leaderboard,
             color=discord.Color.blue(),
         )

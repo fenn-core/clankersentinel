@@ -1,10 +1,14 @@
-from bot.config import TEST_GUILD_ID, format_time
-from bot.config import info, error
 import discord
 from discord.ext import commands
-from bot.services import database
 from time import time
 from asyncio import sleep, create_task
+from bot.services import database
+from bot.config import (
+    TEST_GUILD_ID,
+    format_time,
+    info,
+    error,
+)
 
 
 class ClankerSentinel(commands.Bot):

@@ -1,5 +1,5 @@
-from bot.config import DATABASE_PATH
 import sqlite3
+from bot.config import DATABASE_PATH
 
 
 def create_user_stats_table(conn):

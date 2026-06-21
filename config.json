@@ -1,0 +1,52 @@
+{
+    "descriptions": {
+        "ping": "Botun ağ gecikmesini görüntüler",
+        "rank": "Seviye, deneyim ve aktivite istatistiklerini görüntüler",
+        "leaderboard": {
+            "group": "Sunucudaki en aktif kullanıcıları sıralar",
+            "text": "Sunucuda en çok mesaj atan kullanıcıları sıralar",
+            "voice": "Sunucuda sesli kanallarda en çok vakit geçiren kullanıcıları sıralar"
+        },
+        "autoresponse": {
+            "group": "Otomatik cevapları ekler, kaldırır ve yönetir",
+            "add": {
+                "group": "Otomatik cevap ekler",
+                "trigger": "Botun tetikleneceği kelime veya cümle",
+                "response": "Botun vereceği yanıt"
+            },
+            "delete": "Secilen otomatik cevabi siler",
+            "state": "Secilen otomatik cevabı acıp kapatır",
+            "listall": "Tum otomatik cevaplari listeler"
+        }
+    },
+    "embed_elements": {
+        "rank": {
+            "title": "'s Server Stats",
+            "level": "Level",
+            "text_level": "Text Level",
+            "voice_level": "Voice Level",
+            "total_xp": "Total XP",
+            "text_xp": "Text XP",
+            "voice_xp": "Voice XP",
+            "messages": "Messages",
+            "voice_time": "Voice Time"
+        },
+        "leaderboard": {
+            "text_leaderboard_title": "🏆 Text Leaderboard 🏆",
+            "voice_leaderboard_title": "🏆 Voice Leaderboard 🏆"
+        }
+    },
+    "feedback": {
+        "leaderboard": {
+            "no_text_data": "Hata : Henüz mesaj verisi bulunmuyor.",
+            "no_voice_data": "Hata : Henüz sesli verisi bulunmuyor."
+        },
+        "autoresponse": {
+            "added": "Otomatik mesaj eklendi",
+            "exists": "Hata : Bu otomatik cevap onceden ayarlanmis",
+            "deleted": "Otomatik cevap silindi",
+            "not_found": "Hata : Otomatik cevap bulunamadi",
+            "changed_state": "Otomatik cevap durumu degistirildi"
+        }
+    }
+}
