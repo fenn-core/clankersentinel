@@ -42,7 +42,7 @@
             "no_voice_data": "Hata : Henüz sesli verisi bulunmuyor."
         },
         "autoresponse": {
-            "added": "Otomatik mesaj eklendi",
+            "added": "Otomatik cevap eklendi",
             "exists": "Hata : Bu otomatik cevap onceden ayarlanmis",
             "deleted": "Otomatik cevap silindi",
             "not_found": "Hata : Otomatik cevap bulunamadi",

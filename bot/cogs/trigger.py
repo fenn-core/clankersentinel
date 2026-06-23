@@ -12,7 +12,7 @@ AUTORESPONSE_FEEDBACK = FEEDBACK["autoresponse"]
 
 
 class TriggerCog(commands.Cog):
-    def __init__(self, bot):
+    def __init__(self, bot) -> None:
         self.bot = bot
 
     autoresponse_group = app_commands.Group(
@@ -26,8 +26,8 @@ class TriggerCog(commands.Cog):
         trigger=AUTORESPONSE_DESC["add"]["trigger"],
         response=AUTORESPONSE_DESC["add"]["response"],
     )
-    async def add_trigger(self, interaction, trigger: str, response: str):
-        trigger_obj = Trigger(interaction.guild.id, trigger, response, True)
+    async def add_trigger(self, interaction, trigger: str, response: str) -> None:
+        trigger_obj: Trigger = Trigger(interaction.guild.id, trigger, response, True)
 
         if database.query_triggers(self.bot.conn, trigger_obj) is not None:
             await interaction.response.send_message(AUTORESPONSE_FEEDBACK["exists"])
@@ -37,8 +37,8 @@ class TriggerCog(commands.Cog):
         await interaction.response.send_message(AUTORESPONSE_FEEDBACK["added"])
 
     @autoresponse_group.command(name="delete", description=AUTORESPONSE_DESC["delete"])
-    async def delete_trigger(self, interaction, trigger: str):
-        trigger_obj = Trigger(interaction.guild.id, trigger, None, None)
+    async def delete_trigger(self, interaction, trigger: str) -> None:
+        trigger_obj: Trigger = Trigger(interaction.guild.id, trigger, None, None)
         deleted = database.delete_triggers(self.bot.conn, trigger_obj)
 
         if deleted:
@@ -49,7 +49,7 @@ class TriggerCog(commands.Cog):
 
     @autoresponse_group.command(name="state", description=AUTORESPONSE_DESC["state"])
     async def change_trigger_state(self, interaction, trigger: str, status: bool):
-        trigger_obj = Trigger(interaction.guild.id, trigger, None, None)
+        trigger_obj: Trigger = Trigger(interaction.guild.id, trigger, None, None)
         changed = database.change_trigger_state(self.bot.conn, trigger_obj, status)
 
         if changed:
@@ -77,14 +77,14 @@ class TriggerCog(commands.Cog):
         await interaction.response.send_message(f"```{formatted_output}```")
 
     @commands.Cog.listener()
-    async def on_message(self, message):
+    async def on_message(self, message) -> None:
         if message.guild is None:
             return
         if message.author.bot:
             return
 
         message_text = message.content.casefold().strip()
-        trigger = Trigger(message.guild.id, message_text, None, None)
+        trigger: Trigger = Trigger(message.guild.id, message_text, None, None)
         response = database.query_triggers(self.bot.conn, trigger)
 
         if response is None:
@@ -94,5 +94,5 @@ class TriggerCog(commands.Cog):
         await message.channel.send(f"{response}")
 
 
-async def setup(bot):
+async def setup(bot) -> None:
     await bot.add_cog(TriggerCog(bot))

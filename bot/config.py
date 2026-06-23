@@ -1,4 +1,5 @@
 import json
+from typing import LiteralString
 from dotenv import load_dotenv
 from os import getenv
 from pathlib import Path
@@ -9,19 +10,20 @@ env_path = ROOT_DIR / ".env"
 load_dotenv(env_path)
 
 
-TOKEN = getenv("TOKEN")
+TOKEN: str = getenv("TOKEN")
 
 if TOKEN is None:
     raise KeyError
 
 
-TEST_GUILD_ID = int(getenv("TEST_GUILD_ID"))
+TEST_GUILD_ID = getenv("TEST_GUILD_ID")
 
 if TEST_GUILD_ID is None:
     raise KeyError
+TEST_GUILD_ID: int = int(TEST_GUILD_ID)
 
 
-DATABASE_PATH = ROOT_DIR / "bot" / "data" / "clankersentinel.db"
+DATABASE_PATH: Path = ROOT_DIR / "bot" / "data" / "clankersentinel.db"
 
 if DATABASE_PATH is None:
     raise KeyError
@@ -35,23 +37,23 @@ EMBED_ELEMENTS = dicts["embed_elements"]
 FEEDBACK = dicts["feedback"]
 
 
-def info(message):
+def info(message) -> None:
     print(f"\033[92m[INFO]\033[0m {message}")
 
 
-def warning(message):
+def warning(message) -> None:
     print(f"\033[93m[WARNING]\033[0m {message}")
 
 
-def error(message):
+def error(message) -> None:
     print(f"\033[91m[ERROR]\033[0m {message}")
 
 
-def debug(message):
+def debug(message) -> None:
     print(f"\033[96m[DEBUG]\033[0m {message}")
 
 
-def format_time(seconds):
+def format_time(seconds: int) -> LiteralString:
     hours, remainder = divmod(seconds, 3600)
     minutes, _ = divmod(remainder, 60)
 

@@ -19,7 +19,7 @@ def create_user_stats_table(conn):
 
 
 class User:
-    def __init__(self, guild_id, user_id):
+    def __init__(self, guild_id, user_id) -> None:
 
         self.guild_id = guild_id
         self.user_id = user_id
@@ -27,31 +27,31 @@ class User:
         self.voice_seconds = 0
 
     @property
-    def text_xp(self):
+    def text_xp(self) -> int:
         return self.message_count * 20
 
     @property
-    def voice_xp(self):
+    def voice_xp(self) -> int:
         return round(self.voice_seconds * 0.006)
 
     @property
-    def total_xp(self):
+    def total_xp(self) -> int:
         return self.text_xp + self.voice_xp
 
     @property
-    def text_level(self):
+    def text_level(self) -> int:
         return (self.text_xp // 500) + 1
 
     @property
-    def voice_level(self):
+    def voice_level(self) -> int:
         return (self.voice_xp // 500) + 1
 
     @property
-    def level(self):
+    def level(self) -> int:
         return (self.total_xp // 1000) + 1
 
 
-def ensure_user(conn, user):
+def ensure_user(conn, user) -> bool:
     cursor = conn.cursor()
     user_data = (
         user.guild_id,
@@ -117,7 +117,7 @@ def increment_message_count(conn, user):
     conn.commit()
 
 
-def record_voice_session(conn, user, session_duration):
+def record_voice_session(conn, user, session_duration) -> None:
     conn.cursor().execute(
         """
     UPDATE user_stats 
@@ -144,7 +144,7 @@ def query_user_stats(conn, user):
     return cursor.fetchone()
 
 
-def create_auto_responses_table(conn):
+def create_auto_responses_table(conn) -> None:
     conn.cursor().execute("""
     CREATE TABLE IF NOT EXISTS auto_responses (
         guild_id INTEGER NOT NULL,
@@ -159,11 +159,11 @@ def create_auto_responses_table(conn):
 
 
 class Trigger:
-    def __init__(self, guild_id, trigger, response, enabled):
+    def __init__(self, guild_id, trigger, response, enabled) -> None:
         self.guild_id = guild_id
-        self.trigger = trigger
-        self.response = response
-        self.enabled = enabled
+        self.trigger: str = trigger
+        self.response: str = response
+        self.enabled: bool = enabled
 
 
 def add_trigger(conn, trigger):
@@ -185,7 +185,7 @@ def add_trigger(conn, trigger):
     conn.commit()
 
 
-def delete_trigger(conn, trigger):
+def delete_trigger(conn, trigger) -> None:
     conn.cursor().execute(
         """
     DELETE FROM auto_responses 
@@ -258,7 +258,7 @@ def delete_triggers(conn, trigger):
     return cursor.rowcount != 0  # return False if no value gets deleted
 
 
-def connect():
+def connect() -> sqlite3.Connection:
     conn = sqlite3.connect(DATABASE_PATH)
     return conn
 
@@ -271,6 +271,6 @@ def initialize():
     return conn
 
 
-def shutdown(conn):
+def shutdown(conn) -> None:
     conn.commit()
     conn.close()

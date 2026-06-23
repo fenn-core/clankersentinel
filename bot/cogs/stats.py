@@ -1,3 +1,5 @@
+from typing import Literal
+
 import discord
 from discord import app_commands
 from discord.ext import commands
@@ -21,12 +23,12 @@ LEADERBOARD_FEEDBACK = FEEDBACK["leaderboard"]
 
 
 class StatsCog(commands.Cog):
-    def __init__(self, bot):
+    def __init__(self, bot) -> None:
         self.bot = bot
         self.active_voice_sessions = {}
 
     @commands.Cog.listener()
-    async def on_message(self, message):
+    async def on_message(self, message) -> None:
         if message.guild is None:
             return
         if message.author.bot:
@@ -37,7 +39,7 @@ class StatsCog(commands.Cog):
         database.increment_message_count(self.bot.conn, user)
 
     @commands.Cog.listener()
-    async def on_voice_state_update(self, member, before, after):
+    async def on_voice_state_update(self, member, before, after) -> None:
         if member.guild is None:
             return
 
@@ -62,7 +64,7 @@ class StatsCog(commands.Cog):
         name="rank",
         description=DESCRIPTIONS["rank"],
     )
-    async def rank(self, interaction):
+    async def rank(self, interaction) -> None:
         user = User(interaction.guild.id, interaction.user.id)
         database.ensure_user(self.bot.conn, user)
         user.message_count, user.voice_seconds = database.query_user_stats(
@@ -108,7 +110,9 @@ class StatsCog(commands.Cog):
     )
 
     @leaderboard_group.command(name="text", description=LEADERBOARD_DESC["text"])
-    async def text(self, interaction: discord.Interaction):
+    async def text(
+        self, interaction: discord.Interaction
+    ) -> discord.InteractionCallbackResponse[discord.Client] | None:
 
         text_top5 = database.retrieve_top5_text_users(
             self.bot.conn, interaction.guild.id
@@ -122,10 +126,10 @@ class StatsCog(commands.Cog):
         leaderboard = ""
 
         for rank, (user_id, message_count) in enumerate(text_top5, start=1):
-            member = interaction.guild.get_member(user_id)
+            member: discord.Member | None = interaction.guild.get_member(user_id)
 
             if member:
-                name = member.display_name
+                name: str = member.display_name
             else:
                 user = await self.bot.fetch_user(user_id)
                 name = user.name
@@ -144,7 +148,9 @@ class StatsCog(commands.Cog):
         name="voice",
         description=LEADERBOARD_DESC["voice"],
     )
-    async def voice(self, interaction: discord.Interaction):
+    async def voice(
+        self, interaction: discord.Interaction
+    ) -> discord.InteractionCallbackResponse[discord.Client] | None:
         voice_top5 = database.retrieve_top5_voice_users(
             self.bot.conn, interaction.guild.id
         )
@@ -154,14 +160,14 @@ class StatsCog(commands.Cog):
                 LEADERBOARD_FEEDBACK["no_voice_data"]
             )
 
-        leaderboard = ""
+        leaderboard: Literal[""] = ""
 
         for rank, (user_id, user_voice_time) in enumerate(voice_top5, start=1):
             formatted_time = format_time(user_voice_time)
-            member = interaction.guild.get_member(user_id)
+            member: discord.Member | None = interaction.guild.get_member(user_id)
 
             if member:
-                name = member.display_name
+                name: str = member.display_name
             else:
                 user = await self.bot.fetch_user(user_id)
                 name = user.name
@@ -177,5 +183,5 @@ class StatsCog(commands.Cog):
         await interaction.response.send_message(embed=embed)
 
 
-async def setup(bot):
+async def setup(bot) -> None:
     await bot.add_cog(StatsCog(bot))

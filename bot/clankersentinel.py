@@ -1,3 +1,5 @@
+from typing import NoReturn
+
 import discord
 from discord.ext import commands
 from time import time
@@ -12,7 +14,7 @@ from bot.config import (
 
 
 class ClankerSentinel(commands.Bot):
-    def __init__(self):
+    def __init__(self) -> None:
         intents = discord.Intents.default()
         intents.message_content = True
         super().__init__(command_prefix="/", intents=intents)
@@ -20,12 +22,12 @@ class ClankerSentinel(commands.Bot):
         self.startup_time = None
         self.uptime_task = None
 
-    async def uptime(self):
+    async def uptime(self) -> NoReturn:
         while True:
             await sleep(300)
             info(f"uptime : {format_time(time() - self.startup_time)}")
 
-    async def setup_hook(self):
+    async def setup_hook(self) -> None:
         self.conn = database.initialize()
         if self.conn is None:
             error("database initialization failed")
@@ -45,7 +47,7 @@ class ClankerSentinel(commands.Bot):
 
         self.startup_time = time()
 
-    async def on_ready(self):
+    async def on_ready(self) -> None:
         info(f"Bot successfully logged in as {self.user}")
 
         if self.uptime_task is None:
