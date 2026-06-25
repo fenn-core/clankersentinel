@@ -23,6 +23,10 @@ class ClankerSentinel(commands.Bot):
         self.uptime_task = None
 
     async def uptime(self) -> NoReturn:
+        """
+        Prints out bot uptime to the terminal every 5 minutes
+        """
+
         while True:
             await sleep(300)
             info(f"uptime : {format_time(time() - self.startup_time)}")

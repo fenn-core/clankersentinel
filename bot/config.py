@@ -37,23 +37,27 @@ EMBED_ELEMENTS = dicts["embed_elements"]
 FEEDBACK = dicts["feedback"]
 
 
-def info(message) -> None:
+def info(message: str) -> None:
     print(f"\033[92m[INFO]\033[0m {message}")
 
 
-def warning(message) -> None:
+def warning(message: str) -> None:
     print(f"\033[93m[WARNING]\033[0m {message}")
 
 
-def error(message) -> None:
+def error(message: str) -> None:
     print(f"\033[91m[ERROR]\033[0m {message}")
 
 
-def debug(message) -> None:
+def debug(message: str) -> None:
     print(f"\033[96m[DEBUG]\033[0m {message}")
 
 
 def format_time(seconds: int) -> LiteralString:
+    """
+    Return the given duration in seconds formatted as  H : M
+    """
+
     hours, remainder = divmod(seconds, 3600)
     minutes, _ = divmod(remainder, 60)
 
