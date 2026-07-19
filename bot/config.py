@@ -35,6 +35,7 @@ with open("config.json", "r") as config:
 DESCRIPTIONS = dicts["descriptions"]
 EMBED_ELEMENTS = dicts["embed_elements"]
 FEEDBACK = dicts["feedback"]
+SETTINGS = dicts["settings"]
 
 
 def info(message: str) -> None:

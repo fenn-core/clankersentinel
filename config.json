@@ -17,7 +17,8 @@
             "delete": "Secilen otomatik cevabi siler",
             "state": "Secilen otomatik cevabı acıp kapatır",
             "listall": "Tum otomatik cevaplari listeler"
-        }
+        },
+        "bet": "Rulete belirtilen miktarda bahis yapar"
     },
     "embed_elements": {
         "rank": {
@@ -47,6 +48,17 @@
             "deleted": "Otomatik cevap silindi",
             "not_found": "Hata : Otomatik cevap bulunamadi",
             "changed_state": "Otomatik cevap durumu degistirildi"
+        },
+        "roulette": {
+            "bet_placed": "{renk} rengine {miktar} kadar bahis yaptiniz, yeni bakiyeniz: {amount}"
+        }
+    },
+    "settings": {
+        "wallet": {
+            "default_balance": 5000
+        },
+        "roulette": {
+            "betting_window_seconds": 120
         }
     }
 }
