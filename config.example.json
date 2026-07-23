@@ -63,6 +63,6 @@
     },
     "setup": {
         "env_path": "/etc/clankersentinel/clankersentinel.env",
-        "database_path": "srv/apps/discord-bot/data/clankersentinel.db"
+        "database_path": "/srv/apps/discord-bot/data/clankersentinel.db"
     }
 }
