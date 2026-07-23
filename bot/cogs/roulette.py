@@ -33,20 +33,14 @@ class RouletteCog:
         else:
             return "black"
 
-    @app_commands.command(name="bet", description=DESCRIPTIONS["bet"])
-    async def place_bet(self, interaction):
+    # @app_commands.command(name="bet", description=DESCRIPTIONS["bet"])
+    # async def place_bet(self, interaction):
 
-
-
-
-
-
-
-        # await interaction.response.send_message(
-        #     ROULETTE_FEEDBACK["bet_placed"].format(
-        #         color=placed_color, amount=bet_amount, balance=current_balance
-        #     )
-        # )
+    # await interaction.response.send_message(
+    #     ROULETTE_FEEDBACK["bet_placed"].format(
+    #         color=placed_color, amount=bet_amount, balance=current_balance
+    #     )
+    # )
 
 
 # roulette outputs text for now, the final version

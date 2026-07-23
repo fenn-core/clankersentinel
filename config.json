@@ -60,5 +60,9 @@
         "roulette": {
             "betting_window_seconds": 120
         }
+    },
+    "setup": {
+        "env_path": "/etc/clankersentinel/clankersentinel.env",
+        "database_path": "srv/apps/discord-bot/data/clankersentinel.db"
     }
 }

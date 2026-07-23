@@ -4,9 +4,20 @@ from dotenv import load_dotenv
 from os import getenv
 from pathlib import Path
 
-ROOT_DIR = Path(__file__).resolve().parent.parent
+with open("config.json", "r") as config:
+    dicts = json.load(config)
 
-env_path = ROOT_DIR / ".env"
+DESCRIPTIONS = dicts["descriptions"]
+EMBED_ELEMENTS = dicts["embed_elements"]
+FEEDBACK = dicts["feedback"]
+SETTINGS = dicts["settings"]
+SETUP = dicts["setup"]
+
+
+ROOT_DIR = Path(__file__).resolve().parent.parent
+# PARENT_DIR = ROOT_DIR.parent
+
+env_path = Path(SETUP["env_path"])
 load_dotenv(env_path)
 
 
@@ -20,22 +31,14 @@ TEST_GUILD_ID = getenv("TEST_GUILD_ID")
 
 if TEST_GUILD_ID is None:
     raise KeyError
+
 TEST_GUILD_ID: int = int(TEST_GUILD_ID)
 
 
-DATABASE_PATH: Path = ROOT_DIR / "bot" / "data" / "clankersentinel.db"
+DATABASE_PATH: Path = Path(SETUP["database_path"])
 
 if DATABASE_PATH is None:
     raise KeyError
-
-
-with open("config.json", "r") as config:
-    dicts = json.load(config)
-
-DESCRIPTIONS = dicts["descriptions"]
-EMBED_ELEMENTS = dicts["embed_elements"]
-FEEDBACK = dicts["feedback"]
-SETTINGS = dicts["settings"]
 
 
 def info(message: str) -> None:
