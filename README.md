@@ -39,5 +39,6 @@ Early development.
 
 ## Deployment
 
-Currently developed locally
-Planned deployment target: Raspberry Pi 5 
+Currently deployed on a Raspberry Pi 5 8 GB
+
+For deployment, make your own .env and config.json files using the examples provided
