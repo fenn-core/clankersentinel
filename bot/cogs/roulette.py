@@ -1,7 +1,7 @@
 from discord import app_commands
 from random import randint
 from typing import Literal
-from config import DESCRIPTIONS, FEEDBACK
+from config import DESCRIPTIONS, FEEDBACK, ASSETS_DIR
 
 ROULETTE_FEEDBACK = FEEDBACK["roulette"]
 
@@ -32,15 +32,6 @@ class RouletteCog:
 
         else:
             return "black"
-
-    # @app_commands.command(name="bet", description=DESCRIPTIONS["bet"])
-    # async def place_bet(self, interaction):
-
-    # await interaction.response.send_message(
-    #     ROULETTE_FEEDBACK["bet_placed"].format(
-    #         color=placed_color, amount=bet_amount, balance=current_balance
-    #     )
-    # )
 
 
 # roulette outputs text for now, the final version

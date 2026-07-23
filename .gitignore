@@ -6,3 +6,4 @@ __pycache__/
 logs/
 .vscode/
 .ruff_cache/
+local_files/

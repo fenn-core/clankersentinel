@@ -3,7 +3,7 @@
         "ping": "Botun ağ gecikmesini görüntüler",
         "rank": {
             "command": "Seviye, deneyim ve aktivite istatistiklerini görüntüler",
-            "user": "rankı sorgulanacak kullanıcı"
+            "user": "Istatistikleri sorgulanacak kullanıcı"
         },
         "leaderboard": {
             "group": "Sunucudaki en aktif kullanıcıları sıralar",

@@ -14,8 +14,8 @@ SETTINGS = dicts["settings"]
 SETUP = dicts["setup"]
 
 
-ROOT_DIR = Path(__file__).resolve().parent.parent
-# PARENT_DIR = ROOT_DIR.parent
+ROOT_DIR: Path = Path(__file__).resolve().parent.parent
+ASSETS_DIR: Path = ROOT_DIR / "assets"
 
 env_path = Path(SETUP["env_path"])
 load_dotenv(env_path)
