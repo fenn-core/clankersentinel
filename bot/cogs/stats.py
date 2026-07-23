@@ -1,4 +1,4 @@
-from typing import Literal
+from typing import Literal, Union
 
 import discord
 from discord import app_commands
@@ -62,45 +62,55 @@ class StatsCog(commands.Cog):
 
     @app_commands.command(
         name="rank",
-        description=DESCRIPTIONS["rank"],
+        description=DESCRIPTIONS["rank"]["command"],
     )
-    async def rank(self, interaction) -> None:
-        user = User(interaction.guild.id, interaction.user.id)
-        database.ensure_user(self.bot.conn, user)
-        user.message_count, user.voice_seconds = database.query_user_stats(
-            self.bot.conn, user
+    @app_commands.describe(
+        user=DESCRIPTIONS["rank"]["user"],
+    )
+    async def rank(
+        self, interaction, user: Union[discord.Member, discord.User]
+    ) -> None:
+
+        user_obj = User(interaction.guild.id, user.id)
+        database.ensure_user(self.bot.conn, user_obj)
+        user_obj.message_count, user_obj.voice_seconds = database.query_user_stats(
+            self.bot.conn, user_obj
         )
 
         rank_embed = EMBED_ELEMENTS["rank"]
 
         embed = discord.Embed(
-            title=f"{interaction.user.name}{rank_embed["title"]}",
+            title=f"{user.name}{rank_embed["title"]}",
             color=discord.Color.blue(),
         )
-        embed.add_field(name=rank_embed["level"], value=user.level, inline=True)
+        embed.add_field(name=rank_embed["level"], value=user_obj.level, inline=True)
         embed.add_field(
-            name=rank_embed["text_level"], value=user.text_level, inline=True
+            name=rank_embed["text_level"], value=user_obj.text_level, inline=True
         )
         embed.add_field(
-            name=rank_embed["voice_level"], value=user.voice_level, inline=True
+            name=rank_embed["voice_level"], value=user_obj.voice_level, inline=True
         )
 
-        embed.add_field(name=rank_embed["total_xp"], value=user.total_xp, inline=True)
-        embed.add_field(name=rank_embed["text_xp"], value=user.text_xp, inline=True)
-        embed.add_field(name=rank_embed["voice_xp"], value=user.voice_xp, inline=True)
+        embed.add_field(
+            name=rank_embed["total_xp"], value=user_obj.total_xp, inline=True
+        )
+        embed.add_field(name=rank_embed["text_xp"], value=user_obj.text_xp, inline=True)
+        embed.add_field(
+            name=rank_embed["voice_xp"], value=user_obj.voice_xp, inline=True
+        )
 
         embed.add_field(
-            name=rank_embed["messages"], value=user.message_count, inline=True
+            name=rank_embed["messages"], value=user_obj.message_count, inline=True
         )
         embed.add_field(
             name=rank_embed["voice_time"],
-            value=format_time(user.voice_seconds),
+            value=format_time(user_obj.voice_seconds),
             inline=True,
         )
 
         await interaction.response.send_message(embed=embed)
-        user.message_count = 0
-        user.voice_seconds = 0
+        user_obj.message_count = 0
+        user_obj.voice_seconds = 0
 
         # the formatting used here is temporary,
         # an image based output system will be implemented in the future

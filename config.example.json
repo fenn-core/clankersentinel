@@ -1,7 +1,10 @@
 {
     "descriptions": {
         "ping": "Botun ağ gecikmesini görüntüler",
-        "rank": "Seviye, deneyim ve aktivite istatistiklerini görüntüler",
+        "rank": {
+            "command": "Seviye, deneyim ve aktivite istatistiklerini görüntüler",
+            "user": "rankı sorgulanacak kullanıcı"
+        },
         "leaderboard": {
             "group": "Sunucudaki en aktif kullanıcıları sıralar",
             "text": "Sunucuda en çok mesaj atan kullanıcıları sıralar",
@@ -10,7 +13,7 @@
         "autoresponse": {
             "group": "Otomatik cevapları ekler, kaldırır ve yönetir",
             "add": {
-                "group": "Otomatik cevap ekler",
+                "command": "Otomatik cevap ekler",
                 "trigger": "Botun tetikleneceği kelime veya cümle",
                 "response": "Botun vereceği yanıt"
             },

@@ -20,7 +20,7 @@ class TriggerCog(commands.Cog):
     )
 
     @autoresponse_group.command(
-        name="add", description=AUTORESPONSE_DESC["add"]["group"]
+        name="add", description=AUTORESPONSE_DESC["add"]["command"]
     )
     @app_commands.describe(
         trigger=AUTORESPONSE_DESC["add"]["trigger"],
