@@ -59,13 +59,16 @@ def debug(message: str) -> None:
 
 def format_time(seconds: int) -> LiteralString:
     """
-    Return the given duration in seconds formatted as  H : M
+    Return the given duration in seconds formatted as D : H : M
     """
 
-    hours, remainder = divmod(seconds, 3600)
+    days, remainder = divmod(seconds, 86400)
+    hours, remainder = divmod(remainder, 3600)
     minutes, _ = divmod(remainder, 60)
 
     parts = []
+    if days:
+        parts.append(f"{days}d")
     if hours:
         parts.append(f"{hours}h")
     if minutes or not parts:
