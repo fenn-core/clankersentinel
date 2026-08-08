@@ -44,6 +44,8 @@ class ClankerSentinel(commands.Bot):
         info("loaded StatsCog")
         await self.load_extension("bot.cogs.trigger")
         info("loaded TriggerCog")
+        await self.load_extension("bot.cogs.announcement_translation")
+        info("loaded AnnouncementTranslationCog")
 
         guild = discord.Object(id=TEST_GUILD_ID)
         self.tree.copy_global_to(guild=guild)

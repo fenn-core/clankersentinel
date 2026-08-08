@@ -16,6 +16,16 @@ SETUP = dicts["setup"]
 
 ROOT_DIR: Path = Path(__file__).resolve().parent.parent
 ASSETS_DIR: Path = ROOT_DIR / "assets"
+PROMPTS_DIR: Path = ROOT_DIR / "bot" / "prompts"
+
+
+announcement_translation_path: Path = PROMPTS_DIR / "announcement_translation.txt"
+with open(announcement_translation_path, "r") as ann_translation_file:
+    ANN_TRANSLATION_PROMPT: str = ann_translation_file.read()
+
+if ANN_TRANSLATION_PROMPT is None:
+    raise KeyError
+
 
 env_path = Path(SETUP["env_path"])
 load_dotenv(env_path)
